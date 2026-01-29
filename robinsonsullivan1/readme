@@ -1,0 +1,16 @@
+Class: CS-451: "Operating Systems"
+Assignment: Project 1
+Date: 28 January 2026
+Author: Samantha Robinson, Elizabeth Sullivan
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+This program runs a version of the ps command (5ps). It can read/display various processes from the program, such as state, the time utilized by the process (utime + stime)
+in seconds, the virtual memory consumed by the proram in pages, and the command that started the program. All project requirements are met: two .c files (processInfo.c and
+main.c), one .h file (processInfo.h), a readme file, and a demo file. 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+The program can be used as followes from the terminal: 
+To compile (if necessary): 
+gcc -Wall -Wextra -o robinsonsullivan1 main.c processInfo.c
+To run: 
+./robinsonsullivan1 -p $$ -s -t -v -c
+To see running psid:
+ps aux | head -5

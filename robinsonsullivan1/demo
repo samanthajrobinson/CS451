@@ -1,0 +1,17 @@
+samantha@samantha-QEMU-Virtual-Machine:~$ cd robinsonsullivan1
+samantha@samantha-QEMU-Virtual-Machine:~/robinsonsullivan1$ gcc -Wall -Wextra -o robinsonsullivan1 main.c processInfo.c
+samantha@samantha-QEMU-Virtual-Machine:~/robinsonsullivan1$ ps aux | head -5
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root           1  0.9  0.4  25764 15176 ?        Ss   15:22   0:00 /usr/lib/systemd/systemd --switched-root --system --deserialize=48 splash
+root           2  0.0  0.0      0     0 ?        S    15:22   0:00 [kthreadd]
+root           3  0.0  0.0      0     0 ?        S    15:22   0:00 [pool_workqueue_release]
+root           4  0.0  0.0      0     0 ?        I<   15:22   0:00 [kworker/R-rcu_gp]
+samantha@samantha-QEMU-Virtual-Machine:~/robinsonsullivan1$ ./robinsonsullivan1 -p 1 -s -t -v -c
+1: S time=00:00:00 sz=6441 [/usr/lib/systemd/systemd --switched-root --system --deserialize=48 splash]
+samantha@samantha-QEMU-Virtual-Machine:~/robinsonsullivan1$ ./robinsonsullivan1 -p 2 -t -v -c -s
+2: S time=00:00:00 sz=0 []
+samantha@samantha-QEMU-Virtual-Machine:~/robinsonsullivan1$ ./robinsonsullivan1 -p $$ -s -t -v -c
+3073: S time=00:00:00 sz=5183 [/usr/bin/bash]
+samantha@samantha-QEMU-Virtual-Machine:~/robinsonsullivan1$ ./robinsonsullivan1 -p $$ -s -t -v -c
+
+
