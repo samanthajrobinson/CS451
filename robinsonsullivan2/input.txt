@@ -1,0 +1,6 @@
+process_number arrival_time burst_time
+0 1 7
+1 2 4
+2 4 6
+3 6 4
+4 7 2

@@ -1,0 +1,13 @@
+Build:
+  gcc child.c -o child
+  gcc srtfScheduler.c timer.c -o scheduler
+
+Run:
+  ./scheduler input.txt
+
+Notes:
+- child handles SIGTSTP (suspend), SIGCONT (resume), SIGTERM (terminate).
+- scheduler implements preemptive SRTF with tie-breaks:
+  1) earliest arrival, 2) smallest process number.
+- timer uses SIGALRM + setitimer to tick every 1 second.
+
