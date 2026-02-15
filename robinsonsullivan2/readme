@@ -1,13 +1,17 @@
-Build:
-  gcc child.c -o child
-  gcc srtfScheduler.c timer.c -o scheduler
-
-Run:
-  ./scheduler input.txt
-
-Notes:
-- child handles SIGTSTP (suspend), SIGCONT (resume), SIGTERM (terminate).
-- scheduler implements preemptive SRTF with tie-breaks:
-  1) earliest arrival, 2) smallest process number.
-- timer uses SIGALRM + setitimer to tick every 1 second.
+Class: CS-451: "Operating Systems"
+Assignment: Project 2
+Date: 18 February 2026
+Author: Samantha Robinson, Elizabeth Sullivan
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+This program runs a version of the Shortest Remaining Time First (SRTF) CPU scheduler using fork/exec, signals, and a one second timer interrupt. The program reads an input 
+file of processes, creates the child process, and runs the processes based on the smallest remaining burst time. The child program simulates CPU work by searching for prime 
+numbers and responds to SIGTSTP (suspend), SIGCONT (resume), and SIGTERM (terminate). All project requirements are met: two .c files (srtfScheduler.c, timer.c, and child.c), 
+the required header files (srtfScheduler.h, timer.h, child.h), an input test file, a readme file, and a demo file. 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+The program can be used as follows from the terminal: 
+To compile (if necessary):
+gcc child.c -o child
+gcc srtfScheduler.c timer.c -o scheduler
+To run: 
+./scheduler input.txt
 
