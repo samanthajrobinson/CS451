@@ -1,5 +1,8 @@
-#include "child.h"
+// File: child.c
+// Author: Samantha Robinson, Elizabeth Sullivan
+// Date: 18 February 2026
 
+#include "child.h" 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

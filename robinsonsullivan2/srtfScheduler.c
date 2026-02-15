@@ -1,4 +1,6 @@
-// srtfScheduler.c  (bare-minimum preemptive SRTF scheduler)
+// File: srtfScheduler.c
+// Author: Samantha Robinson, Elizabeth Sullivan
+// Date: 18 February 2026
 
 #include "timer.h"
 #include "srtfScheduler.h"
@@ -15,21 +17,18 @@
 typedef struct {
     int procNum;
     int arrival;
-    int remaining;   // burst remaining
-    pid_t pid;       // 0 until forked
-    int finished;    // 0/1
+    int remaining;
+    pid_t pid;
+    int finished;   
 } Process;
 
 static Process procs[MAX_PROCS];
 static int nProcs = 0;
 
 static int currentTime = 0;
-static int running = -1;     // index into procs, -1 if none
+static int running = -1;
 static int completed = 0;
 
-/* ----------------------------
-   Input
-   ---------------------------- */
 static void load_input(const char *path) {
     FILE *f = fopen(path, "r");
     if (!f) {
@@ -47,7 +46,6 @@ static void load_input(const char *path) {
     }
 
     while (fgets(line, sizeof(line), f)) {
-        // skip empty/comment-ish lines
         if (line[0] == '\n' || line[0] == '\r' || line[0] == '#') continue;
 
         int p, a, b;
@@ -64,7 +62,6 @@ static void load_input(const char *path) {
             procs[nProcs].finished = 0;
             nProcs++;
         }
-        // if sscanf fails, ignore the line (bare minimum robustness)
     }
 
     fclose(f);
@@ -75,9 +72,6 @@ static void load_input(const char *path) {
     }
 }
 
-/* ----------------------------
-   Selection (SRTF + tie-breaks)
-   ---------------------------- */
 static int choose_best_ready(void) {
     int best = -1;
 
@@ -90,19 +84,16 @@ static int choose_best_ready(void) {
             continue;
         }
 
-        // smallest remaining time wins
         if (procs[i].remaining < procs[best].remaining) {
             best = i;
             continue;
         }
 
         if (procs[i].remaining == procs[best].remaining) {
-            // tie 1: earlier arrival
             if (procs[i].arrival < procs[best].arrival) {
                 best = i;
                 continue;
             }
-            // tie 2: smaller process number
             if (procs[i].arrival == procs[best].arrival &&
                 procs[i].procNum < procs[best].procNum) {
                 best = i;
@@ -114,9 +105,6 @@ static int choose_best_ready(void) {
     return best;
 }
 
-/* ----------------------------
-   Child control
-   ---------------------------- */
 static void spawn_child(int idx) {
     pid_t pid = fork();
     if (pid < 0) {
@@ -168,13 +156,9 @@ static void finish(int idx) {
     completed++;
 }
 
-/* ----------------------------
-   Tick (called every 1 second)
-   ---------------------------- */
 void scheduler_tick(void) {
     currentTime++;
 
-    // Run currently running process for 1 second
     if (running != -1 && !procs[running].finished) {
         procs[running].remaining--;
 
@@ -184,7 +168,6 @@ void scheduler_tick(void) {
         }
     }
 
-    // If all done
     if (completed == nProcs) {
         printf("Complete!\n");
         fflush(stdout);
@@ -193,12 +176,10 @@ void scheduler_tick(void) {
 
     int best = choose_best_ready();
     if (best == -1) {
-        return; // nothing ready yet
+        return;
     }
 
-    // 🔥 NEW SAFE CONTINUE CASE
     if (best == running) {
-        // still the same process, explicitly print continue
         printf("t=%d CONTINUE p=%d pid=%d rem=%d\n",
                currentTime,
                procs[running].procNum,
@@ -208,7 +189,6 @@ void scheduler_tick(void) {
         return;
     }
 
-    // Switch required
     if (running != -1) {
         preempt(running);
     }
@@ -217,11 +197,6 @@ void scheduler_tick(void) {
     start_or_resume(running);
 }
 
-
-
-/* ----------------------------
-   Main
-   ---------------------------- */
 int main(int argc, char **argv) {
     if (argc != 2) {
         fprintf(stderr, "Usage: %s input.txt\n", argv[0]);
@@ -230,10 +205,8 @@ int main(int argc, char **argv) {
 
     load_input(argv[1]);
 
-    // start 1-second timer ticks
     timer_start(scheduler_tick);
 
-    // keep scheduler alive to receive SIGALRM
     while (1) pause();
     return 0;
 }
