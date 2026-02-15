@@ -1,0 +1,50 @@
+samantha@samantha-QEMU-Virtual-Machine:~/CS451$ cd robinsonsullivan2
+samantha@samantha-QEMU-Virtual-Machine:~/CS451/robinsonsullivan2$ gcc child.c -o child
+gcc srtfScheduler.c timer.c -o scheduler
+samantha@samantha-QEMU-Virtual-Machine:~/CS451/robinsonsullivan2$ ./scheduler input.txt
+t=1 START p=0 pid=15041 rem=7
+CHILD START p=0 pid=15041 rand=5197599978
+t=2 PREEMPT p=0 pid=15041 rem=6
+CHILD SUSPEND p=0 pid=15041 highest=5197934713
+t=2 START p=1 pid=15042 rem=4
+CHILD START p=1 pid=15042 rand=5197599978
+t=3 CONTINUE p=1 pid=15042 rem=3
+t=4 CONTINUE p=1 pid=15042 rem=2
+t=5 CONTINUE p=1 pid=15042 rem=1
+t=6 FINISH p=1 pid=15042
+CHILD END p=1 pid=15042 highest=5199023567
+t=6 START p=3 pid=15043 rem=4
+CHILD START p=3 pid=15043 rand=1088592027
+t=7 PREEMPT p=3 pid=15043 rem=3
+CHILD SUSPEND p=3 pid=15043 highest=1089265739
+t=7 START p=4 pid=15044 rem=2
+CHILD START p=4 pid=15044 rand=6889685612
+t=8 CONTINUE p=4 pid=15044 rem=1
+t=9 FINISH p=4 pid=15044
+t=9 CONTINUE p=3 pid=15043 rem=3
+CHILD END p=4 pid=15044 highest=6890335189
+CHILD RESUME p=3 pid=15043 highest=1089265739
+t=10 CONTINUE p=3 pid=15043 rem=2
+t=11 CONTINUE p=3 pid=15043 rem=1
+t=12 FINISH p=3 pid=15043
+t=12 CONTINUE p=0 pid=15041 rem=6
+CHILD END p=3 pid=15043 highest=1091459393
+CHILD RESUME p=0 pid=15041 highest=5197934713
+t=13 CONTINUE p=0 pid=15041 rem=5
+t=14 CONTINUE p=0 pid=15041 rem=4
+t=15 CONTINUE p=0 pid=15041 rem=3
+t=16 CONTINUE p=0 pid=15041 rem=2
+t=17 CONTINUE p=0 pid=15041 rem=1
+t=18 FINISH p=0 pid=15041
+CHILD END p=0 pid=15041 highest=5200210817
+t=18 START p=2 pid=15045 rem=6
+CHILD START p=2 pid=15045 rand=4133551569
+t=19 CONTINUE p=2 pid=15045 rem=5
+t=20 CONTINUE p=2 pid=15045 rem=4
+t=21 CONTINUE p=2 pid=15045 rem=3
+t=22 CONTINUE p=2 pid=15045 rem=2
+t=23 CONTINUE p=2 pid=15045 rem=1
+t=24 FINISH p=2 pid=15045
+Complete!
+CHILD END p=2 pid=15045 highest=4135921373
+
