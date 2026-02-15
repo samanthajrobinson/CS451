@@ -13,6 +13,13 @@
 static int proc_num = -1;
 static unsigned long long highest_prime = 0;
 
+/**************************************************
+Method Name: is_prime
+Returns: int
+Input: unsigned long long n
+Precondition: n is a positive integer
+Task: Determines whether n is a prime number.
+ **************************************************/
 static int is_prime(unsigned long long n) {
     if (n < 2) return 0;
     if (n % 2 == 0) return n == 2;
@@ -22,19 +29,40 @@ static int is_prime(unsigned long long n) {
     return 1;
 }
 
+/**************************************************
+Method Name: on_tstp
+Returns: void
+Input: int sig
+Precondition: Triggered by SIGTSTP
+Task: Prints suspend message and stops the process
+ **************************************************/
 static void on_tstp(int sig) {
     (void)sig;
     printf("CHILD SUSPEND p=%d pid=%d highest=%llu\n", proc_num, getpid(), highest_prime);
     fflush(stdout);
-    raise(SIGSTOP); // actually stop
+    raise(SIGSTOP); // Stop the process
 }
 
+/**************************************************
+Method Name: on_cont
+Returns: void
+Input: int sig
+Precondition: Triggered by SIGCONT
+Task: Prints resume message and continues execution
+ **************************************************/
 static void on_cont(int sig) {
     (void)sig;
     printf("CHILD RESUME p=%d pid=%d highest=%llu\n", proc_num, getpid(), highest_prime);
     fflush(stdout);
 }
 
+/**************************************************
+Method Name: on_term
+Returns: void
+Input: int sig
+Precondition: Triggered by SIGTERM
+Task: Prints end message and ends the process
+ **************************************************/
 static void on_term(int sig) {
     (void)sig;
     printf("CHILD END p=%d pid=%d highest=%llu\n", proc_num, getpid(), highest_prime);
@@ -42,6 +70,13 @@ static void on_term(int sig) {
     _exit(0);
 }
 
+/**************************************************
+Method Name: rand_10_digit
+Returns: unsigned long long
+Input: N/A
+Precondition: srand() is called
+Task: Generates a random 10-digit starting number
+ **************************************************/
 static unsigned long long rand_10_digit(void) {
     // build a larger random number than rand() alone
     unsigned long long a = (unsigned long long)rand();
@@ -50,6 +85,13 @@ static unsigned long long rand_10_digit(void) {
     return 1000000000ULL + (c % 9000000000ULL); // [1,000,000,000 .. 9,999,999,999]
 }
 
+/**************************************************
+Method Name: main
+Returns: int
+Input: int argc, char **argv
+Precondition: Program must be run as ./child -p <process_number>
+Task: Complete Project
+ **************************************************/
 int main(int argc, char **argv) {
     if (argc != 3 || strcmp(argv[1], "-p") != 0) {
         fprintf(stderr, "Usage: %s -p <process_number>\n", argv[0]);
