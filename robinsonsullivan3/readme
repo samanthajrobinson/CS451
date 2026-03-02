@@ -7,7 +7,7 @@ Author: Samantha Robinson, Elizabeth Sullivan
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 The program can be used as follows from the terminal: 
 To compile (if necessary):
-
+gcc scheduler.c -o scheduler
+gcc prime.c -o prime
 To run: 
-
-
+./scheduler input.txt
