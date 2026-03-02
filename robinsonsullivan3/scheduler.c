@@ -132,7 +132,6 @@ static void schedule_one_tick(void) {
     // Choose the best ready process
     int next = pick_next_ready();
     if (next == -1) {
-        // nobody ready this second
         return;
     }
 
