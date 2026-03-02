@@ -85,8 +85,11 @@ static int pick_next_ready(void) {
         if (procs[i].arrival > (int)currentTime) continue;
         if (procs[i].remaining <= 0) continue;
 
-        if (procs[i].priority < bestPri) {
-            bestPri = procs[i].priority;
+        if (next == -1 ||
+            procs[i].priority < procs[next].priority ||
+            (procs[i].priority == procs[next].priority &&
+             procs[i].arrival < procs[next].arrival))
+        {
             next = i;
         }
     }
@@ -105,17 +108,14 @@ Task: Decrements remaining time for the currently running process.
   the selected one (fork/exec or SIGCONT).
  **************************************************/
 static void schedule_one_tick(void) {
-    // 1) Account for the last second of CPU time for whoever was running
     if (running != -1) {
         if (procs[running].remaining > 0) {
             procs[running].remaining--;
         }
         if (procs[running].remaining == 0 && !procs[running].finished) {
-            printf("Scheduler: Time Now: %d second(s)\n", (int)currentTime);
-            printf("Terminating Process %d (Pid %d)\n",
-                   procs[running].processNum, (int)procs[running].pid);
+            printf("\nScheduler: Time Now: %d seconds\n", (int)currentTime);
+            printf("Terminating Process %d (Pid %d)\n", procs[running].processNum, (int)procs[running].pid);
             fflush(stdout);
-
             kill(procs[running].pid, SIGTERM);
             procs[running].finished = 1;
             running = -1;
@@ -123,8 +123,7 @@ static void schedule_one_tick(void) {
     }
 
     if (all_finished()) {
-        printf("Scheduler: Time Now: %d second(s)\n", (int)currentTime);
-        printf("All processes finished. Exiting scheduler.\n");
+        printf("\nScheduler: Time Now: %d seconds\n", (int)currentTime);
         fflush(stdout);
         exit(0);
     }
@@ -137,20 +136,28 @@ static void schedule_one_tick(void) {
 
     // Preempt/switch
     if (next != running) {
-        printf("Scheduler: Time Now: %d second(s)\n", (int)currentTime);
+      printf("\nScheduler: Time Now: %d seconds\n", (int)currentTime);
 
-        // Suspend current
-        if (running != -1) {
-            printf("Suspending Process %d (Pid %d)\n",
-                   procs[running].processNum, (int)procs[running].pid);
-            fflush(stdout);
-            kill(procs[running].pid, SIGTSTP);
-        }
+      if (running != -1) {
+          // If next hasn't started yet, fork it first so PID exists
+          if (!procs[next].started) {
+              fork_and_exec(next);
+              procs[next].started = 1;
+          }
 
-        // Start or resume the chosen process
+          printf("Suspending Process %d (Pid %d) and Resuming Process %d (Pid %d)\n",
+                 procs[running].processNum, (int)procs[running].pid,
+                 procs[next].processNum, (int)procs[next].pid);
+          fflush(stdout);
+
+          kill(procs[running].pid, SIGTSTP);
+          kill(procs[next].pid, SIGCONT);
+      }
+      else {
         if (!procs[next].started) {
             fork_and_exec(next);
             procs[next].started = 1;
+
             printf("Scheduling to Process %d (Pid %d)\n",
                    procs[next].processNum, (int)procs[next].pid);
             fflush(stdout);
@@ -158,10 +165,12 @@ static void schedule_one_tick(void) {
             printf("Resuming Process %d (Pid %d)\n",
                    procs[next].processNum, (int)procs[next].pid);
             fflush(stdout);
-            kill(procs[next].pid, SIGCONT);
         }
 
-        running = next;
+          kill(procs[next].pid, SIGCONT);
+      }
+
+    running = next;
     }
 }
 
@@ -193,7 +202,6 @@ static void read_input(const char *filename) {
         perror("fopen");
         exit(1);
     }
-
     n = 0;
     while (n < 10) {
         PCB p;
