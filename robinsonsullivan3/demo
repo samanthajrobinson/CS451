@@ -1,0 +1,55 @@
+samantha@samantha-QEMU-Virtual-Machine:~/CS451/robinsonsullivan3$ gcc scheduler.c -o scheduler
+samantha@samantha-QEMU-Virtual-Machine:~/CS451/robinsonsullivan3$ gcc prime.c -o prime
+samantha@samantha-QEMU-Virtual-Machine:~/CS451/robinsonsullivan3$ ./scheduler input.txt
+Scheduler: Time Now: 1 second(s)
+Scheduling to Process 0 (Pid 7736)
+Process 0: My priority is 3, my PID is 7736: I just got started.
+I am starting with the number 1234567890 to find the next prime number.
+Scheduler: Time Now: 2 second(s)
+Suspending Process 0 (Pid 7736)
+Process 0: My priority is 3, my PID is 7736: I am about to be suspended... Highest prime number I found is 0.
+Scheduling to Process 2 (Pid 7737)
+Process 2: My priority is 1, my PID is 7737: I just got started.
+I am starting with the number 1234767890 to find the next prime number.
+Scheduler: Time Now: 4 second(s)
+Terminating Process 2 (Pid 7737)
+Scheduler: Time Now: 4 second(s)
+Process 2: My priority is 1, my PID is 7737: I completed my task and I am exiting. Highest prime number I found is 0.
+Scheduling to Process 1 (Pid 7738)
+Process 1: My priority is 2, my PID is 7738: I just got started.
+I am starting with the number 1234667890 to find the next prime number.
+Scheduler: Time Now: 8 second(s)
+Terminating Process 1 (Pid 7738)
+Scheduler: Time Now: 8 second(s)
+Process 1: My priority is 2, my PID is 7738: I completed my task and I am exiting. Highest prime number I found is 1234667909.
+Scheduling to Process 3 (Pid 7739)
+Process 3: My priority is 2, my PID is 7739: I just got started.
+I am starting with the number 1234867890 to find the next prime number.
+Scheduler: Time Now: 14 second(s)
+Terminating Process 3 (Pid 7739)
+Scheduler: Time Now: 14 second(s)
+Resuming Process 0 (Pid 7736)
+Process 3: My priority is 2, my PID is 7739: I completed my task and I am exiting. Highest prime number I found is 1234867943.
+Process 0: My priority is 3, my PID is 7736: I just got resumed. Highest prime number I found is 0.
+Scheduler: Time Now: 19 second(s)
+Terminating Process 0 (Pid 7736)
+Scheduler: Time Now: 19 second(s)
+Process 0: My priority is 3, my PID is 7736: I completed my task and I am exiting. Highest prime number I found is 1234567907.
+Scheduling to Process 4 (Pid 7741)
+Process 4: My priority is 3, my PID is 7741: I just got started.
+I am starting with the number 1234967890 to find the next prime number.
+Scheduler: Time Now: 23 second(s)
+Terminating Process 4 (Pid 7741)
+Scheduler: Time Now: 23 second(s)
+Process 4: My priority is 3, my PID is 7741: I completed my task and I am exiting. Highest prime number I found is 1234967933.
+Scheduling to Process 5 (Pid 7742)
+Process 5: My priority is 4, my PID is 7742: I just got started.
+I am starting with the number 1235067890 to find the next prime number.
+Scheduler: Time Now: 25 second(s)
+Terminating Process 5 (Pid 7742)
+Scheduler: Time Now: 25 second(s)
+All processes finished. Exiting scheduler.
+Process 5: My priority is 4, my PID is 7742: I completed my task and I am exiting. Highest prime number I found is 1235067893.
+samantha@samantha-QEMU-Virtual-Machine:~/CS451/robinsonsullivan3$ 
+
+

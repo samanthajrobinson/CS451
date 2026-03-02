@@ -15,7 +15,7 @@ typedef struct {
     int processNum;
     int arrival;
     int burst;
-    int priority;
+    int priority;   // lower number = higher priority
     int remaining;
     int started;
     int finished;
@@ -25,43 +25,34 @@ typedef struct {
 static PCB procs[10];
 static int n = 0;
 
-static volatile sig_atomic_t currentTime = 0;
-static int running = -1;
+static volatile sig_atomic_t currentTime = 0;  // seconds
+static int running = -1;                       // index in procs[], -1 if none
 
-/**************************************************
-Method Name: fork_and_exec
-Returns: void
-Input: int idx
-Precondition: idx is a valid index in procs[]
-Task: Forks a child process and execs ./prime with args:
-      <processNum> <priority>, then stores the child's PID.
- **************************************************/
 static void fork_and_exec(int idx) {
     pid_t pid = fork();
     if (pid < 0) {
         perror("fork");
         exit(1);
     }
+
     if (pid == 0) {
+        // child -> exec child with args: -p processNum -r priority
         char pnum[16], pri[16];
         snprintf(pnum, sizeof(pnum), "%d", procs[idx].processNum);
         snprintf(pri, sizeof(pri), "%d", procs[idx].priority);
 
-        execl("./prime", "prime", pnum, pri, (char *)NULL);
-        perror("execl");
+        execlp("./child", "./child",
+               "-p", pnum,
+               "-r", pri,
+               (char *)NULL);
+
+        perror("execlp");
         _exit(1);
     }
 
     procs[idx].pid = pid;
 }
 
-/**************************************************
-Method Name: all_finished
-Returns: int
-Input: N/A
-Precondition: procs[] has been populated, n > 0
-Task: Returns 1 if all processes are finished, otherwise 0.
- **************************************************/
 static int all_finished(void) {
     for (int i = 0; i < n; i++) {
         if (!procs[i].finished) return 0;
@@ -69,13 +60,6 @@ static int all_finished(void) {
     return 1;
 }
 
-/**************************************************
-Method Name: pick_next_ready
-Returns: int
-Input: N/A
-Precondition: currentTime reflects the scheduler's time in seconds
-Task: Chooses the next ready process based on preemptive priority
- **************************************************/
 static int pick_next_ready(void) {
     int next = -1;
     int bestPri = 1 << 30;
@@ -85,31 +69,24 @@ static int pick_next_ready(void) {
         if (procs[i].arrival > (int)currentTime) continue;
         if (procs[i].remaining <= 0) continue;
 
+        // Highest priority = lowest priority number
         if (procs[i].priority < bestPri) {
             bestPri = procs[i].priority;
             next = i;
         }
+        // Tie-breaker by arrival time is naturally handled because input is
+        // already in increasing arrival order; we keep the first one found.
     }
     return next;
 }
 
-/**************************************************
-Method Name: schedule_one_tick
-Returns: void
-Input: N/A
-Precondition: Called once per second (timer tick)
-Task: Decrements remaining time for the currently running process.
-  If it reaches 0, terminate it and mark finished. If all processes 
-  finished, exit scheduler. Picks the best ready process by priority.
-  If needed, preempts current process (SIGTSTP) and starts/resumes 
-  the selected one (fork/exec or SIGCONT).
- **************************************************/
 static void schedule_one_tick(void) {
     // 1) Account for the last second of CPU time for whoever was running
     if (running != -1) {
         if (procs[running].remaining > 0) {
             procs[running].remaining--;
         }
+
         if (procs[running].remaining == 0 && !procs[running].finished) {
             printf("Scheduler: Time Now: %d second(s)\n", (int)currentTime);
             printf("Terminating Process %d (Pid %d)\n",
@@ -129,18 +106,18 @@ static void schedule_one_tick(void) {
         exit(0);
     }
 
-    // Choose the best ready process
+    // 2) Choose best ready process (highest priority = lowest number)
     int next = pick_next_ready();
     if (next == -1) {
         // nobody ready this second
         return;
     }
 
-    // Preempt/switch
+    // 3) If different from current running, preempt/switch
     if (next != running) {
         printf("Scheduler: Time Now: %d second(s)\n", (int)currentTime);
 
-        // Suspend current
+        // Suspend current, if any
         if (running != -1) {
             printf("Suspending Process %d (Pid %d)\n",
                    procs[running].processNum, (int)procs[running].pid);
@@ -152,13 +129,18 @@ static void schedule_one_tick(void) {
         if (!procs[next].started) {
             fork_and_exec(next);
             procs[next].started = 1;
+
             printf("Scheduling to Process %d (Pid %d)\n",
                    procs[next].processNum, (int)procs[next].pid);
             fflush(stdout);
+
+            // Start execution (child prints "started" message on its own)
+            kill(procs[next].pid, SIGCONT);
         } else {
             printf("Resuming Process %d (Pid %d)\n",
                    procs[next].processNum, (int)procs[next].pid);
             fflush(stdout);
+
             kill(procs[next].pid, SIGCONT);
         }
 
@@ -166,28 +148,12 @@ static void schedule_one_tick(void) {
     }
 }
 
-/**************************************************
-Method Name: timer_handler
-Returns: void
-Input: int signum
-Precondition: Triggered by SIGALRM once per second
-Task: Increments scheduler time and runs one scheduling tick.
- **************************************************/
 static void timer_handler(int signum) {
     (void)signum;
     currentTime++;
     schedule_one_tick();
 }
 
-/**************************************************
-Method Name: read_input
-Returns: void
-Input: const char *filename
-Precondition: filename points to a readable text file where each line
-  contains: processNum arrival burst priority
-Task: Reads process definitions from file into procs[] and initializes
-  PCB fields (remaining/started/finished/pid).
- **************************************************/
 static void read_input(const char *filename) {
     FILE *f = fopen(filename, "r");
     if (!f) {
@@ -205,29 +171,23 @@ static void read_input(const char *filename) {
             fprintf(stderr, "Bad input line (expected 4 ints).\n");
             exit(1);
         }
+
         p.remaining = p.burst;
         p.started = 0;
         p.finished = 0;
         p.pid = -1;
+
         procs[n++] = p;
     }
 
     fclose(f);
+
     if (n == 0) {
         fprintf(stderr, "No processes found in input.\n");
         exit(1);
     }
 }
 
-/**************************************************
-Method Name: main
-Returns: int
-Input: int argc, char **argv
-Precondition: Program must be run as ./scheduler input.txt
-Task: Initializes scheduler state, installs SIGALRM handler,
-  starts a 1-second interval timer, and loops forever while
-  scheduling happens on each timer tick.
- **************************************************/
 int main(int argc, char **argv) {
     if (argc != 2) {
         fprintf(stderr, "Usage: %s input.txt\n", argv[0]);
@@ -235,6 +195,7 @@ int main(int argc, char **argv) {
     }
 
     read_input(argv[1]);
+
     struct sigaction sa;
     memset(&sa, 0, sizeof(sa));
     sa.sa_handler = timer_handler;
@@ -251,5 +212,6 @@ int main(int argc, char **argv) {
         return 1;
     }
 
+    // Busy loop; scheduling happens in SIGALRM handler each second.
     while (1) { }
 }
