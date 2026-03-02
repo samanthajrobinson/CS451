@@ -3,12 +3,10 @@ Assignment: Project 2
 Date: 18 February 2026
 Author: Samantha Robinson, Elizabeth Sullivan
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-This program runs a version of a Priority-Based CPU Scheduler with preemption using fork/exec, signals, and a one second timer interrupt. The program reads an input file of 
-processes, creates one child process for each entry, and schedules the processes based on priority (lower number indicates higher priority). If a new process arrives with a 
-higher priority than the currently running process, the scheduler preempts the running process. The child program simulates CPU work by continuously searching for large prime 
-numbers. Each child process responds to SIGTSTP (suspend), SIGCONT (resume), and SIGTERM (terminate), printing the required status messages when these signals are received. 
-The scheduler keeps track of time using a real-time interval timer and performs scheduling decisions once per second. All project requirements are met: the required input test 
-file, a readme file, and a demo file. For viewing purposes an additional line was included in the output.
+This program runs a version of the Shortest Remaining Time First (SRTF) CPU scheduler using fork/exec, signals, and a one second timer interrupt. The program reads an input 
+file of processes, creates the child process, and runs the processes based on the smallest remaining burst time. The child program simulates CPU work by searching for prime 
+numbers and responds to SIGTSTP (suspend), SIGCONT (resume), and SIGTERM (terminate). All project requirements are met: two .c files (srtfScheduler.c, timer.c, and child.c), 
+the required header files (srtfScheduler.h, timer.h, child.h), an input test file, a readme file, and a demo file. 
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 The program can be used as follows from the terminal: 
 To compile (if necessary):
