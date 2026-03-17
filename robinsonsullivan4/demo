@@ -1,0 +1,69 @@
+samantha@samantha-QEMU-Virtual-Machine:~/CS451/robinsonsullivan4$ gcc -o Party main.c TaxiAndStudentFunctions.c -lpthread
+samantha@samantha-QEMU-Virtual-Machine:~/CS451/robinsonsullivan4$ ./Party -s 12 -t 3 -m 15
+Student 0: I am at the party. It is way more fun than I expected...
+My party time is: 8
+Student 1: I am at the party. It is way more fun than I expected...
+My party time is: 7
+Student 2: I am at the party. It is way more fun than I expected...
+My party time is: 9
+Student 4: I am at the party. It is way more fun than I expected...
+My party time is: 3
+Student 5: I am at the party. It is way more fun than I expected...
+My party time is: 13
+Student 3: I am at the party. It is way more fun than I expected...
+My party time is: 15
+Student 6: I am at the party. It is way more fun than I expected...
+My party time is: 14
+Student 8: I am at the party. It is way more fun than I expected...
+My party time is: 4
+Student 9: I am at the party. It is way more fun than I expected...
+My party time is: 4
+Student 10: I am at the party. It is way more fun than I expected...
+My party time is: 15
+Taxi 0: Waiting to arrive at the curb.
+Taxi 0: I arrived at the curb.
+Taxi 0: Waiting for students...
+Taxi 1: Waiting to arrive at the curb.
+Student 11: I am at the party. It is way more fun than I expected...
+My party time is: 14
+Student 7: I am at the party. It is way more fun than I expected...
+My party time is: 4
+Taxi 2: Waiting to arrive at the curb.
+Student 4: I am done partying and waiting for a taxi.
+Taxi 0: I have picked up 1 student(s). Student IDs: 4
+Student 8: I am done partying and waiting for a taxi.
+Student 9: I am done partying and waiting for a taxi.
+Student 7: I am done partying and waiting for a taxi.
+Taxi 0: I have picked up 2 student(s). Student IDs: 4 8
+Taxi 0: I have picked up 3 student(s). Student IDs: 4 8 9
+Taxi 0: I have picked up 4 student(s). Student IDs: 4 8 9 7
+Taxi 0: Departing with 4 students. Total students picked up: 4
+Taxi 1: I arrived at the curb.
+Taxi 1: Waiting for students...
+Taxi 0: Waiting to arrive at the curb.
+Student 1: I am done partying and waiting for a taxi.
+Taxi 1: I have picked up 1 student(s). Student IDs: 1
+Student 0: I am done partying and waiting for a taxi.
+Taxi 1: I have picked up 2 student(s). Student IDs: 1 0
+Student 2: I am done partying and waiting for a taxi.
+Taxi 1: I have picked up 3 student(s). Student IDs: 1 0 2
+Student 5: I am done partying and waiting for a taxi.
+Taxi 1: I have picked up 4 student(s). Student IDs: 1 0 2 5
+Taxi 1: Departing with 4 students. Total students picked up: 8
+Taxi 2: I arrived at the curb.
+Taxi 2: Waiting for students...
+Taxi 1: Waiting to arrive at the curb.
+Student 6: I am done partying and waiting for a taxi.
+Taxi 2: I have picked up 1 student(s). Student IDs: 6
+Student 11: I am done partying and waiting for a taxi.
+Taxi 2: I have picked up 2 student(s). Student IDs: 6 11
+Student 3: I am done partying and waiting for a taxi.
+Student 10: I am done partying and waiting for a taxi.
+Taxi 2: I have picked up 3 student(s). Student IDs: 6 11 3
+Taxi 2: I have picked up 4 student(s). Student IDs: 6 11 3 10
+Taxi 2: Departing with 4 students. Total students picked up: 12
+Taxi 2: Waiting to arrive at the curb.
+All students have been taken home.
+samantha@samantha-QEMU-Virtual-Machine:~/CS451/robinsonsullivan4$ 
+
+

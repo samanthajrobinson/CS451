@@ -1,0 +1,18 @@
+Class: CS-451: "Operating Systems"
+Assignment: Project 4
+Date: 17 March 2026
+Author: Samantha Robinson, Elizabeth Sullivan
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+This program simulates a taxi pickup system using POSIX threads and semaphores to model synchronization between students and taxis. Each student thread represents a student 
+attending a party for a random amount of time and then waiting for a taxi. Taxi threads repeatedly arrive at a curb and pick up students in groups of four. A circular queue is 
+used to manage the order of waiting students, ensuring that students are picked up in the order they finish partying. Semaphores are used to enforce mutual exclusion on the 
+queue, coordinate when students are ready, and ensure that only one taxi can occupy the curb at a time. Students signal when they are ready to be picked up, and taxis wait 
+until four students are available before departing. After each trip, taxis signal the corresponding students that their ride is complete. The program continues until all 
+students have been picked up and taken home. Input validation ensures that the number of students is divisible by four and within the allowed limits. All project requirements 
+are met: the use of pthreads, semaphores, synchronization constraints, command-line arguments, and proper thread termination.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+The program can be used as follows from the terminal: 
+To compile (if necessary):
+gcc -o Party main.c TaxiAndStudentFunctions.c -lpthread
+To run: 
+./Party -s 12 -t 3 -m 15
